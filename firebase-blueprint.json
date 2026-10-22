@@ -1,0 +1,110 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Admin or Staff user account for AKOS POS",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "maxLength": 50 },
+        "fullName": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "enum": ["admin", "staff"] },
+        "passwordHash": { "type": "string", "maxLength": 200 },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["username", "fullName", "role", "passwordHash", "active", "createdAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Supermarket retail inventory product",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "barcode": { "type": "string", "maxLength": 100 },
+        "mrp": { "type": "number" },
+        "sellingPrice": { "type": "number" },
+        "stock": { "type": "number" },
+        "category": { "type": "string", "maxLength": 100 },
+        "lowStockThreshold": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "barcode", "mrp", "sellingPrice", "stock", "createdAt"]
+    },
+    "Sale": {
+      "title": "Sale",
+      "description": "Completed supermarket checkout transaction",
+      "type": "object",
+      "properties": {
+        "billNumber": { "type": "string", "maxLength": 50 },
+        "cashierId": { "type": "string", "maxLength": 100 },
+        "cashierName": { "type": "string", "maxLength": 100 },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "discount": { "type": "number" },
+        "grandTotal": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cash", "upi", "card", "other"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["billNumber", "cashierName", "items", "subtotal", "grandTotal", "paymentMethod", "createdAt"]
+    },
+    "StockAdjustment": {
+      "title": "StockAdjustment",
+      "description": "Audit record of stock changes",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "maxLength": 100 },
+        "productName": { "type": "string", "maxLength": 200 },
+        "barcode": { "type": "string", "maxLength": 100 },
+        "previousStock": { "type": "number" },
+        "change": { "type": "number" },
+        "newStock": { "type": "number" },
+        "reason": { "type": "string", "maxLength": 255 },
+        "adjustedByName": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["productId", "productName", "previousStock", "change", "newStock", "reason", "adjustedByName", "createdAt"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "AKOS store branding and POS configuration",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string", "maxLength": 100 },
+        "logoUrl": { "type": "string", "maxLength": 500 },
+        "address": { "type": "string", "maxLength": 255 },
+        "city": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "receiptFooter": { "type": "string", "maxLength": 255 },
+        "currencySymbol": { "type": "string", "maxLength": 10 },
+        "lowStockThreshold": { "type": "number" },
+        "receiptWidth": { "type": "string", "enum": ["58mm", "80mm"] },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["storeName", "currencySymbol", "receiptWidth"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User accounts and credentials"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Inventory products"
+    },
+    "/sales/{saleId}": {
+      "schema": "Sale",
+      "description": "Completed sales and bills"
+    },
+    "/stock_adjustments/{adjustmentId}": {
+      "schema": "StockAdjustment",
+      "description": "Audit log for inventory movements"
+    },
+    "/store_settings/{settingsId}": {
+      "schema": "StoreSettings",
+      "description": "AKOS store settings and receipt templates"
+    }
+  }
+}
